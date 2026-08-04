@@ -1,0 +1,32 @@
+#!/bin/bash
+# mmport.app baslatici
+#
+# Python paketini Resources/lib altindan calistirir, yerel sunucuyu acar ve
+# tarayiciyi yonlendirir. `exec` kullaniyoruz: boylece uygulamadan cikildiginda
+# (Cmd-Q ya da Dock > Cikis) sunucu da birlikte kapanir.
+
+set -u
+HERE="$(cd "$(dirname "$0")/.." && pwd)"
+LIB="$HERE/Resources/lib"
+
+die() {
+  /usr/bin/osascript -e "display dialog \"$1\" with title \"mmport\" buttons {\"Tamam\"} default button 1 with icon caution" >/dev/null 2>&1
+  exit 1
+}
+
+PY=""
+for c in /usr/bin/python3 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
+  [ -x "$c" ] && { PY="$c"; break; }
+done
+[ -z "$PY" ] && PY="$(command -v python3 2>/dev/null || true)"
+[ -z "$PY" ] && die "python3 bulunamadi.
+
+Terminal'de sunu calistirip tekrar deneyin:
+
+    xcode-select --install"
+
+# Homebrew'u PATH'e ekle: cmake, ninja ve rsvg-convert oradan gelir
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+cd "$LIB" || die "Uygulama paketi bozuk: Resources/lib yok"
+exec "$PY" -m mmport --serve
