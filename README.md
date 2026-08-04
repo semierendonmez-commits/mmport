@@ -1,7 +1,5 @@
 # mmport
 
-# mmport
-
 Turns VCV Rack plugins into `.mmplugin` files for the [4ms MetaModule](https://4ms.info).
 
 Point it at a git URL, a `.zip`, or a folder. It scans the source, drops the
