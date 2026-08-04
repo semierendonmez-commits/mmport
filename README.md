@@ -9,39 +9,7 @@ PNG, generates the project files, and builds.
 It never writes to the upstream source — the port lands in a separate folder and
 references the original tree from outside.
 
-## Install
 
-Drag `mmport.app` to Applications and open it. The interface opens in your
-browser; the server listens on `127.0.0.1` only.
-
-The app is unsigned, so macOS blocks it the first time:
-
-```bash
-xattr -dr com.apple.quarantine /Applications/mmport.app
-```
-
-or right-click in Finder › **Open** › **Open**.
-
-You'll need Python 3 (`xcode-select --install`) plus:
-
-```bash
-brew install librsvg cmake ninja
-```
-
-The ARM toolchain (`arm-none-eabi-gcc` 12.3) and the MetaModule SDK download
-themselves into `~/.mmport` on first run. Delete that folder to remove
-everything.
-
-## Command line
-
-```bash
-cd /Applications/mmport.app/Contents/Resources/lib
-
-python3 -m mmport https://github.com/gosub/forsitan-modulare
-python3 -m mmport <source> --analyze-only   # report only, writes nothing
-python3 -m mmport <source> --no-build       # generate the project, skip the build
-python3 -m mmport <source> --loose          # include risky modules too
-```
 
 ## What it does
 
@@ -81,6 +49,40 @@ The `rt-alloc` split is the interesting one. The tool walks the call graph from
 `process()` and checks whether each edge sits inside an `if` comparing the sample
 rate. Allocations reachable only through guarded paths are informational; one
 unguarded path makes it a warning.
+
+## Install
+
+Drag `mmport.app` to Applications and open it. The interface opens in your
+browser; the server listens on `127.0.0.1` only.
+
+The app is unsigned, so macOS blocks it the first time:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/mmport.app
+```
+
+or right-click in Finder › **Open** › **Open**.
+
+You'll need Python 3 (`xcode-select --install`) plus:
+
+```bash
+brew install librsvg cmake ninja
+```
+
+The ARM toolchain (`arm-none-eabi-gcc` 12.3) and the MetaModule SDK download
+themselves into `~/.mmport` on first run. Delete that folder to remove
+everything.
+
+## Command line
+
+```bash
+cd /Applications/mmport.app/Contents/Resources/lib
+
+python3 -m mmport https://github.com/gosub/forsitan-modulare
+python3 -m mmport <source> --analyze-only   # report only, writes nothing
+python3 -m mmport <source> --no-build       # generate the project, skip the build
+python3 -m mmport <source> --loose          # include risky modules too
+```
 
 ## Validation
 
